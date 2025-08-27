@@ -1,15 +1,15 @@
-﻿name: CI
+﻿# .github/workflows/ci.yml  (at REPO ROOT)
+name: CI
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: server   # 👈 run all commands from /server
     steps:
       - uses: actions/checkout@v4
 
@@ -20,7 +20,10 @@ jobs:
           java-version: "17"
           cache: maven
 
-      - name: Build (no tests)
+      - name: Make mvnw executable (Linux)
+        run: chmod +x mvnw
+
+      - name: Build (skip tests)
         run: ./mvnw -q -DskipTests package
 
       - name: Run tests
