@@ -1,33 +1,22 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Build output
+/target/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# Logs
+*.log
 
-### IntelliJ IDEA ###
-.idea
-*.iws
+# IDEs / Editors
+.idea/
 *.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
 .vscode/
+.project
+.classpath
+.settings/
+out/
+bin/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Maven wrapper timing file (keep wrapper itself!)
+.mvn/timing.properties
