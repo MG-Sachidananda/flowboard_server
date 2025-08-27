@@ -1,0 +1,130 @@
+Spring Boot Day 1 — what you did (step-by-step) + the theory
+✅ What you just did (chronological)
+
+Set up tools
+
+Verified versions: Java 17, Node, npm, Git.
+
+Installed VS Code extensions: Extension Pack for Java + Spring Boot Extension Pack.
+
+Scaffolded a Spring project (via VS Code Spring Initializr or start.spring.io)
+
+Chose: Maven, Java 17, Spring Boot 3.x.
+
+Group: com.flowboard, Artifact: server.
+
+Dependencies: Spring Web, Spring Data JPA, H2 Database, Lombok.
+
+Saved it into: flowboard/flowboard_server/server.
+
+Ran the app with the Maven Wrapper
+
+From the server folder: mvnw.cmd spring-boot:run (PowerShell needs .\mvnw.cmd).
+
+Verified it started on http://localhost:8080
+ (404 is normal before endpoints).
+
+Fixed environment conflicts
+
+Maven was secretly launching Java 11 (old JAVA_HOME).
+
+Set JAVA_HOME → your JDK 17 path and put its bin at the front of PATH.
+
+Re-ran mvnw.cmd and it worked (Tomcat on port 8080).
+
+Confirmed it’s running
+
+Saw “Tomcat started on port(s): 8080” in logs.
+
+Hitting http://localhost:8080 returned a Spring 404 → server alive.
+
+🧠 The theory behind each piece (fast, practical)
+Java, JDK, JAVA_HOME, PATH
+
+Java is the language.
+
+JDK = Java Development Kit (compiler + tools + runtime).
+
+JAVA_HOME must point to the JDK folder (e.g., C:\Program Files\Java\jdk-17.0.16).
+
+PATH should include %JAVA_HOME%\bin so java/javac resolve to the JDK you want.
+
+Why your error happened: Spring Boot 3 plugins are compiled for Java 17 (class file 61). Maven was running under Java 11 (class file 55) → “compiled by a more recent version” crash. Fixing JAVA_HOME solved it.
+
+Maven & the Maven Wrapper (mvnw/mvnw.cmd)
+
+Maven is to Java what npm is to JS: it downloads libraries, builds, runs.
+
+Wrapper ensures a specific Maven version per project (no global install needed).
+
+pom.xml is like package.json: it lists dependencies and plugins (e.g., Spring Boot plugin).
+
+mvnw.cmd spring-boot:run → runs your app via the Spring Boot plugin.
+
+Spring Boot (what it gives you)
+
+A starter app with an embedded Tomcat server → your app is a single process that listens on a port (8080 by default).
+
+Auto-configuration: when you add Spring Web / JPA / H2, Boot wires sensible defaults so you can code features, not plumbing.
+
+Spring Web (REST layer)
+
+Lets you create HTTP endpoints with annotations:
+
+@RestController to mark a class as an API controller.
+
+@GetMapping, @PostMapping, etc. for routes.
+
+JSON in/out is handled by Jackson automatically.
+
+Spring Data JPA + Hibernate (data layer for SQL)
+
+JPA is the spec; Hibernate is the default implementation.
+
+You define Entities (Java classes ↔ tables).
+
+JpaRepository gives CRUD methods without writing SQL for basic needs.
+
+H2 Database (dev database)
+
+Lightweight, embedded SQL database.
+
+Perfect for learning and day-1 prototyping—no install needed.
+
+You can enable a web console at /h2 to browse tables (we’ll turn this on when we add data).
+
+Lombok (remove Java boilerplate)
+
+An annotation processor that generates getters/setters/constructors at compile time (@Getter, @Setter, @NoArgsConstructor, etc.).
+
+Keeps your entity classes tiny and readable.
+
+Why 404 on / is good right now
+
+Spring Boot started correctly; you just haven’t mapped any route yet.
+
+The moment we add a controller like GET /boards, you’ll see JSON instead of 404.
+
+PowerShell vs cmd.exe (Windows quirk)
+
+PowerShell doesn’t execute from the current folder unless you prefix with .\ → .\mvnw.cmd.
+
+cmd.exe will run mvnw.cmd directly if you’re in that folder.
+
+🛠 Common errors you hit (decoded)
+
+release version 17 not supported → Maven used Java 11; set JAVA_HOME to JDK 17 and update PATH.
+
+RunMojo compiled by a more recent version (61.0) → Same root cause: plugin was built with Java 17; your Maven runtime was 11.
+
+mvnw.cmd not recognized → In PowerShell, you must run .\mvnw.cmd, or use cmd.exe.
+
+🔁 Minimal repeat-anywhere checklist
+
+Install JDK 17 → set JAVA_HOME to it → add ...\bin to PATH (above older JDKs).
+
+Scaffold with Spring Initializr: Spring Web, Spring Data JPA, H2, Lombok.
+
+mvnw.cmd spring-boot:run (or ./mvnw spring-boot:run on Mac/Linux).
+
+Check logs for “Tomcat started on 8080” → open http://localhost:8080.
